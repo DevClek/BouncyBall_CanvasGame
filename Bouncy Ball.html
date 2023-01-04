@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <canvas id="main" width="1300" height="550" style="border: solid 5px black; background-color: grey; display: block;"></canvas>
+        <script>
+            var canvas = document.getElementById('main');
+            var ctx = canvas.getContext('2d');
+            var paddlex = canvas.width/2;
+            var paddley = canvas.height - 20;
+            var scale = 80;
+            var gameover = false;
+            var paddles = 19.99;
+            var score = 0;
+            
+            var ballx = 450;
+            var bally = 50;
+            var dx = 2;
+            var dy = 2;
+            
+            var l2c = false;
+            var l2cx = canvas.width/2;
+            var l2cy = 50;
+            var l2cdx = -2;
+            var l2cdy = 2; 
+            
+            var l3c = false;
+            var l3cx = canvas.width/2;
+            var l3cy = canvas.height/2;
+            var l3cm = 5;
+            
+            var backmusic = new Audio;
+            backmusic.src = "beepboxsong.mp3";
+            var gameoversound = new Audio;
+            gameoversound.src = "Unique Arcade Game Over Theme Free Sound Effect.mp3";
+            var level = 1;
+            
+            var l4c = false;
+            var l4cx = 50;
+            var l4cy = 60;
+            var l4cdx = 10;
+            var l4cdy = 10;
+            
+            draw = function(){
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "black";
+                ctx.font = "30px Arial";
+                ctx.fillText("Score: " + score, 1150, 30);
+                ctx.fillStyle = "black";
+                ctx.font = "30px Arial";
+                ctx.fillText("Level " + level, 1150, 60);
+                paddle();
+                ball();
+                if(score === 15){
+                   ctx.fillStyle = "red";
+                   ctx.font = "40px Arial";
+                   ctx.fillText("LEVEL 2", canvas.width/2, canvas.height/2);
+                   level = 2;
+                   }
+                if(score >= 15){
+                   l2c = true;
+                   }
+                if(l2c){
+                   l2ball();
+                   }
+                if(score === 30){
+                   ctx.fillStyle = "red";
+                   ctx.font = "40px Arial";
+                   ctx.fillText("LEVEL 3", canvas.width/2, canvas.height/2);
+                   ctx.font = "35px Arial";
+                   ctx.fillText("Watch out for the red ball", canvas.width/2, canvas.height/2 + 50);
+                   level = 3;
+                   }
+                if(score >= 30){
+                   l3c = true;
+                   }
+                if(l3c){
+                   l3ball();
+                   }
+                if(score === 45){
+                   ctx.fillStyle = "red";
+                   ctx.font = "40px Arial";
+                   ctx.fillText("LEVEL 4", canvas.width/2, canvas.height/2);
+                   ctx.font = "35px Arial";
+                   ctx.fillText("Watch out for the red BALLS", canvas.width/2, canvas.height/2 + 50);
+                   level = 4;
+                   }
+                if(score >= 45){
+                   l4c = true;
+                   }
+                if(l4c){
+                   l4ball();
+                   }
+                if(score === 60){
+                   ctx.clearRect(0, 0, canvas.width, canvas.height);
+                   paddles = 0;
+                   ctx.fillStyle = "red";
+                   ctx.font = "40px Arial";
+                   ctx.fillText("YOU WON THE GAME CONGRATS", canvas.width/2 - 100, canvas.height/2);
+                   ctx.fillText("FINAL SCORE: 60", canvas.width/2, canvas.height/2 + 50);
+                   }
+                if(gameover){
+                   ctx.clearRect(0, 0, canvas.width, canvas.height);
+                   backmusic.pause();
+                   gameoversound.play();
+                   ctx.fillStyle = "red";
+                   ctx.font = "40px Arial";
+                   ctx.fillText("GAMEOVER FINAL SCORE: " + score, canvas.width/2, canvas.height/2);
+                   setTimeout(gamereload, 7000);
+                   }
+            }
+            setInterval(draw, 20);
+            // black paddle
+            function paddle(){
+                ctx.fillStyle = "black";
+                ctx.fillRect(paddlex, paddley, 80, 20);
+            }
+            // ball
+            function ball(){
+                ctx.beginPath();
+                ctx.arc(ballx, bally, 40, 0, Math.PI*2);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+                ballx += dx;
+                bally += dy;
+                if(bally === 510){
+                   gameover = true;
+                   }
+                if(bally === 40){
+                   dy = 2;
+                   }
+                if(ballx === canvas.width - 40){
+                   dx = -2;
+                }
+                if(ballx === 40){
+                   dx = 2;
+                   }
+                // right side of the first ball
+                if(ballx + 40 >= paddlex && ballx + 40 <= paddlex + 80 && bally === paddley - 40){
+                   score += 1;
+                   dy = -2;
+                   } 
+                // left side of the first ball
+                if(ballx - 40 >= paddlex && ballx - 40 <= paddlex + 80 && bally === paddley - 40){
+                   score += 1;
+                   dy = -2;
+                   } 
+            }
+            // surprise level 2 ball
+            function l2ball(){
+                ctx.beginPath();
+                ctx.arc(l2cx, l2cy, 40, 0, Math.PI*2);
+                ctx.fillStyle = "black";
+                ctx.fill();
+                ctx.closePath();
+                l2cx += l2cdx;
+                l2cy += l2cdy;
+                if(l2cy === 510){
+                   gameover = true;
+                   }
+                if(l2cy === 40){
+                   l2cdy = 2;
+                   }
+                if(l2cx === canvas.width - 40){
+                   l2cdx = -2;
+                }
+                if(l2cx === 40){
+                   l2cdx = 2;
+                   }
+                // right side of level 2 ball
+                if(l2cx + 40 >= paddlex && l2cx + 40 <= paddlex + 80 && l2cy === paddley - 40){
+                   score += 1;
+                   l2cdy = -2;
+                   }
+                // left side of level 2 ball
+                if(l2cx - 40 >= paddlex && l2cx - 40 <= paddlex + 80 && l2cy === paddley - 40){
+                   score += 1;
+                   l2cdy = -2;
+                   }
+            }
+            // surprise level 3 ball
+            function l3ball(){
+                ctx.beginPath();
+                ctx.arc(l3cx, l3cy, 20, 0, Math.PI*2);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+                l3cy += l3cm;
+                if(l3cy === 530){
+                   l3cm = -5;
+                   }
+                if(l3cy === 20){
+                   l3cm = 5;
+                   }
+                if(l3cx + 20 >= paddlex && l3cx + 20 <= paddlex + 80 && l3cy === paddley - 20){
+                   gameover = true;
+                   }
+                if(l3cx - 20 >= paddlex && l3cx - 20 <= paddlex + 80 && l3cy === paddley - 20){
+                   gameover = true;
+                   }
+            }
+            function l4ball(){
+                ctx.beginPath();
+                ctx.arc(l4cx, l4cy, 30, 0, Math.PI*2);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+                l4cx += l4cdx;
+                l4cy += l4cdy;
+                
+                if(l4cy === 510){
+                   l4cdy = -10;
+                   }
+                if(l4cy === 40){
+                   l4cdy = 10;
+                   }
+                if(l4cx === canvas.width - 40){
+                   l4cdx = -10;
+                }
+                if(l4cx === 40){
+                   l4cdx = 10;
+                   }
+                if(l4cx + 15 >= paddlex && l4cx + 15 <= paddlex + 80 && l4cy === paddley - 20){
+                   gameover = true;
+                   }
+                if(l4cx - 15 >= paddlex && l4cx - 15 <= paddlex + 80 && l4cy === paddley - 20){
+                   gameover = true;
+                   }
+            }
+            function gamereload(){
+                location.reload();
+            }
+            function move(e){
+                // left arrow key
+                if(e.keyCode === 37){
+                   paddlex -= paddles;
+                   }
+                // right arrow key
+                if(e.keyCode === 39){
+                   paddlex += paddles;
+                   }
+                // s key
+                if(e.keyCode === 83){
+                   backmusic.play();
+                   }
+                // m key
+                if(e.keyCode === 77){
+                   backmusic.pause();
+                   }
+                if(e.keyCode === 13){
+                   document.getElementById('main').style.display = "block";
+                   }
+            }
+            document.onkeydown = move;
+        </script>
+    </body>
+</html>
