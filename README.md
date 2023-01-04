@@ -6,5 +6,4 @@ A random old project I made a while back
   - In this game you are able to move a padding horizontally and the purpose is to hit all the balls that appear. But, some of the balls may actually make you lose the game. 
   - This project was made a while ago while I was still working on html canvas games.
   
-  
-  
+** I DID NOT CREATE THE "Unique Arcade Game Over Theme Free Sound Effect" sound effect.
